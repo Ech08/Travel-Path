@@ -12,22 +12,12 @@ public class OperatorManagementSystem {
   }
 
   public void createOperator(String operatorName, String location) {
-    // setting up variables
     String words[] = operatorName.split(" ");
     String abbrevName = "";
-    boolean start = true;
 
     // add the first letter of each word in words to abbrevName
-    for (int i = 0; i < words.length; i++) {
-      // if whitespace detected, get ready to add letter
-      if (words[i] == " ") {
-        start = true;
-      }
-      // if ready and whitespace not detected, add letter
-      else if (start = true && words[i] != " ") {
-        abbrevName = abbrevName + words[i].charAt(0);
-        start = false;
-      }
+    for (String word : words) {
+      abbrevName = abbrevName + word.charAt(0);
     }
 
     String fullLoc = Location.fromString(location).getFullName();
