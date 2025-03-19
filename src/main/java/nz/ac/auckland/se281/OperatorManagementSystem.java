@@ -4,7 +4,7 @@ import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
 
-  // custom methods:
+  // custom methods/fields:
   public String idNum(String num) {
     // increments input int by 1 and returns 3 digit string
     char digits[] = num.toCharArray();
@@ -57,7 +57,7 @@ public class OperatorManagementSystem {
     // get operator id
     String numOp = idNum("000");
     String abbrevLoc = Location.fromString(location).getLocationAbbreviation();
-    String idOp = abbrevName + "-" + numOp + "-" + abbrevLoc;
+    String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
 
     // get full location name
     String fullLoc = Location.fromString(location).getFullName();
