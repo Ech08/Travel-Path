@@ -5,22 +5,22 @@ import nz.ac.auckland.se281.Types.Location;
 public class OperatorManagementSystem {
 
   // custom methods:
-  public String idNum(int num) {
+  public String idNum(String num) {
     // increments input int by 1 and returns 3 digit string
-    int digits[] = {0, 0, 0};
+    char digits[] = num.toCharArray();
     boolean carryOut = true;
-    for (int i = 2; i < digits.length; i--) {
+    for (int i = 2; i >= 0; i--) {
       if (carryOut) {
         switch (digits[i]) {
-          case 9:
+          case '9':
             if (i == 0) {
               // set to 999 (largest possible value)
-              digits[0] = 9;
-              digits[1] = 9;
-              digits[2] = 9;
+              digits[0] = '9';
+              digits[1] = '9';
+              digits[2] = '9';
               carryOut = false;
             } else {
-              digits[i] = 0;
+              digits[i] = '0';
               carryOut = true;
             }
             break;
@@ -33,7 +33,8 @@ public class OperatorManagementSystem {
         }
       }
     }
-    return digits.toString();
+    String result = new String(digits);
+    return result;
   }
 
   // Do not change the parameters of the constructor
@@ -53,11 +54,16 @@ public class OperatorManagementSystem {
       abbrevName = abbrevName + word.charAt(0);
     }
 
+    // get operator id
+    String numOp = idNum("000");
+    String abbrevLoc = Location.fromString(location).getLocationAbbreviation();
+    String idOp = abbrevName + "-" + numOp + "-" + abbrevLoc;
+
     // get full location name
     String fullLoc = Location.fromString(location).getFullName();
 
     // print message with all operator properties
-    MessageCli.OPERATOR_CREATED.printMessage(operatorName, abbrevName, fullLoc);
+    MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
   }
 
   public void viewActivities(String operatorId) {
