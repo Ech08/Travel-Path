@@ -4,7 +4,7 @@ import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
 
-  // custom methods/fields:
+  // custom methods/fields/vars:
   public String idNum(String num) {
     // increments input int by 1 and returns 3 digit string
     char digits[] = num.toCharArray();
@@ -41,7 +41,21 @@ public class OperatorManagementSystem {
   public OperatorManagementSystem() {}
 
   public void searchOperators(String keyword) {
-    MessageCli.OPERATORS_FOUND.printMessage("are", "no", "s", ".");
+    // look for keyword
+    // set foundOps to num of operators found
+    // print ops found + message
+
+    int foundOps = 0;
+
+    // display correct message
+    switch (foundOps) {
+      case 0:
+        MessageCli.OPERATORS_FOUND.printMessage("are", "no", "s", ":");
+      case 1:
+        MessageCli.OPERATORS_FOUND.printMessage("are", Integer.toString(foundOps), "", ":");
+      default:
+        MessageCli.OPERATORS_FOUND.printMessage("are", Integer.toString(foundOps), "s", ":");
+    }
   }
 
   public void createOperator(String operatorName, String location) {
