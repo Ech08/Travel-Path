@@ -4,7 +4,7 @@ import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
 
-  // custom methods/fields/vars:
+  // custom methods:
   public String idNum(String num) {
     // increments input int by 1 and returns 3 digit string
     char digits[] = num.toCharArray();
@@ -78,6 +78,7 @@ public class OperatorManagementSystem {
 
     // print message with all operator properties
     MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
+    Operator newOp = new Operator(abbrevName, idOp, fullLoc);
   }
 
   public void viewActivities(String operatorId) {
