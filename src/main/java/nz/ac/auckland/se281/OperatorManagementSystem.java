@@ -59,19 +59,26 @@ public class OperatorManagementSystem {
 
   public void searchOperators(String keyword) {
     // look for keyword
-    // set foundOps to num of operators found
-    // print ops found + message
-    ArrayList<Operator> matches = new ArrayList<>();
-    for (Operator op : opList) {
-      matches.add(op);
-    }
+    // set foundOps to num of operators found (done)
+    // print ops found + message (done)
 
-    int foundOps = 8;
+    int foundOps = 0;
+
+    // if searching * add all operators to matches list
+    ArrayList<Operator> matches = new ArrayList<>();
+
+    // add all operators to list if searching '*'
+    if (keyword.equals("*")) {
+      for (Operator op : opList) {
+        matches.add(op);
+        foundOps++;
+      }
+    }
 
     // display correct message
     switch (foundOps) {
       case 0:
-        MessageCli.OPERATORS_FOUND.printMessage("are", "no", "s", ":");
+        MessageCli.OPERATORS_FOUND.printMessage("are", "no", "s", ".");
         break;
       case 1:
         MessageCli.OPERATORS_FOUND.printMessage("is", Integer.toString(foundOps), "", ":");
@@ -100,8 +107,8 @@ public class OperatorManagementSystem {
 
     // get operator id
     String abbrevLoc = Location.fromString(location).getLocationAbbreviation();
-    String test = locNums.get(abbrevLoc);
-    String numOp = idNum(test);
+    String currentNum = locNums.get(abbrevLoc);
+    String numOp = idNum(currentNum);
     locNums.put(abbrevLoc, numOp);
     String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
 
