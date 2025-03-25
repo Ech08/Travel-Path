@@ -1,11 +1,13 @@
 package nz.ac.auckland.se281;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
 
-  ArrayList<Operator> opList = new ArrayList<>();
+  private ArrayList<Operator> opList = new ArrayList<>();
+  private HashMap<String, String> locNums = new HashMap<String, String>();
 
   // custom methods:
   public String idNum(String num) {
@@ -41,7 +43,19 @@ public class OperatorManagementSystem {
   }
 
   // Do not change the parameters of the constructor
-  public OperatorManagementSystem() {}
+  public OperatorManagementSystem() {
+    this.opList = new ArrayList<>();
+    this.locNums = new HashMap<String, String>();
+
+    this.locNums.put("AKL", "000");
+    this.locNums.put("HLZ", "000");
+    this.locNums.put("TRG", "000");
+    this.locNums.put("TUO", "000");
+    this.locNums.put("WLG", "000");
+    this.locNums.put("NSN", "000");
+    this.locNums.put("CHC", "000");
+    this.locNums.put("DUD", "000");
+  }
 
   public void searchOperators(String keyword) {
     // look for keyword
@@ -85,8 +99,10 @@ public class OperatorManagementSystem {
     abbrevName = abbrevName.toUpperCase();
 
     // get operator id
-    String numOp = idNum("000");
     String abbrevLoc = Location.fromString(location).getLocationAbbreviation();
+    String test = locNums.get(abbrevLoc);
+    String numOp = idNum(test);
+    locNums.put(abbrevLoc, numOp);
     String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
 
     // get full location name
@@ -95,7 +111,7 @@ public class OperatorManagementSystem {
     // print message with all operator properties
     MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
 
-    Operator newOp = new Operator(operatorName, idOp, fullLoc);
+    Operator newOp = new Operator(operatorName, idOp, numOp, fullLoc);
     opList.add(newOp);
   }
 

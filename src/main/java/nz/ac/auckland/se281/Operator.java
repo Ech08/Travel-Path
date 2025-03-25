@@ -9,8 +9,9 @@ public class Operator {
   private String fullLoc;
 
   // initialises operator
-  public Operator(String name, String id, String loc) {
+  public Operator(String name, String id, String idNum, String loc) {
     this.id = id;
+    this.idNum = idNum;
     this.fullName = name;
     this.fullLoc = loc;
   }
