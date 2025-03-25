@@ -67,11 +67,26 @@ public class OperatorManagementSystem {
     // if searching * add all operators to matches list
     ArrayList<Operator> matches = new ArrayList<>();
 
-    // add all operators to list if searching '*'
-    if (keyword.equals("*")) {
+    // add all operators to list if searching '*', else search for keyword in operator details
+    if (keyword.equalsIgnoreCase("*")) {
       for (Operator op : opList) {
         matches.add(op);
         foundOps++;
+      }
+    } else {
+      for (Operator op : opList) {
+        boolean match = false;
+        ArrayList<String> detList = op.getDetails();
+        for (int i = 0; i < 3; i++) {
+          System.out.println(detList.get(i));
+          if (detList.get(i).equalsIgnoreCase(keyword)) {
+            match = true;
+          }
+        }
+        if (match) {
+          foundOps++;
+          matches.add(op);
+        }
       }
     }
 
