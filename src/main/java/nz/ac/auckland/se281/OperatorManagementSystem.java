@@ -120,21 +120,27 @@ public class OperatorManagementSystem {
     }
     abbrevName = abbrevName.toUpperCase();
 
-    // get operator id
+    // get full and abbreviated location name, and current loc operator count
+    String fullLoc = Location.fromString(location).getFullName();
     String abbrevLoc = Location.fromString(location).getLocationAbbreviation();
     String currentNum = locNums.get(abbrevLoc);
-    String numOp = idNum(currentNum);
-    locNums.put(abbrevLoc, numOp);
-    String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
 
-    // get full location name
-    String fullLoc = Location.fromString(location).getFullName();
+    // check if operator already exists
+    if ((!currentNum.equals("000")) /*&& (opList.contains(operatorName))*/) {
+      MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(
+          operatorName, fullLoc);
+    } else {
+      // get operator id
+      String numOp = idNum(currentNum);
+      locNums.put(abbrevLoc, numOp);
+      String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
 
-    // print message with all operator properties
-    MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
+      // print message with all operator properties
+      MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
 
-    Operator newOp = new Operator(operatorName, idOp, numOp, fullLoc);
-    opList.add(newOp);
+      Operator newOp = new Operator(operatorName, idOp, numOp, fullLoc);
+      opList.add(newOp);
+    }
   }
 
   public void viewActivities(String operatorId) {
