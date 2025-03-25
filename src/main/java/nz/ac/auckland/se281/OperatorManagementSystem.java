@@ -48,23 +48,29 @@ public class OperatorManagementSystem {
     // set foundOps to num of operators found
     // print ops found + message
     ArrayList<Operator> matches = new ArrayList<>();
-    matches.add(opList.get(0));
-    int foundOps = 1;
+    // matches.add(opList.get(0));
+    int foundOps = 5;
 
     // display correct message
     switch (foundOps) {
       case 0:
         MessageCli.OPERATORS_FOUND.printMessage("are", "no", "s", ":");
+        break;
       case 1:
-        MessageCli.OPERATORS_FOUND.printMessage("are", Integer.toString(foundOps), "", ":");
+        MessageCli.OPERATORS_FOUND.printMessage("is", Integer.toString(foundOps), "", ":");
+        break;
       default:
         MessageCli.OPERATORS_FOUND.printMessage("are", Integer.toString(foundOps), "s", ":");
+        break;
     }
-
+    for (int i = 0; i < 4; i++) {
+      MessageCli.OPERATOR_ENTRY.printMessage("testName", "testId", "testLoc");
+    }
+    /*
     for (Operator match : matches) {
       ArrayList<String> details = match.getDetails();
       MessageCli.OPERATOR_ENTRY.printMessage(details.get(0), details.get(0), details.get(0));
-    }
+    }*/
   }
 
   public void createOperator(String operatorName, String location) {
@@ -83,7 +89,7 @@ public class OperatorManagementSystem {
     String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
 
     // get full location name
-    String fullLoc = location.getFullName();
+    String fullLoc = Location.fromString(location).getFullName();
 
     // print message with all operator properties
     MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
