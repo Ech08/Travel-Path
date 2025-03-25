@@ -1,8 +1,11 @@
 package nz.ac.auckland.se281;
 
+import java.util.ArrayList;
 import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
+
+  ArrayList<Operator> opList = new ArrayList<>();
 
   // custom methods:
   public String idNum(String num) {
@@ -44,8 +47,9 @@ public class OperatorManagementSystem {
     // look for keyword
     // set foundOps to num of operators found
     // print ops found + message
-
-    int foundOps = 0;
+    ArrayList<Operator> matches = new ArrayList<>();
+    matches.add(opList.get(0));
+    int foundOps = 1;
 
     // display correct message
     switch (foundOps) {
@@ -55,6 +59,11 @@ public class OperatorManagementSystem {
         MessageCli.OPERATORS_FOUND.printMessage("are", Integer.toString(foundOps), "", ":");
       default:
         MessageCli.OPERATORS_FOUND.printMessage("are", Integer.toString(foundOps), "s", ":");
+    }
+
+    for (Operator match : matches) {
+      ArrayList<String> details = match.getDetails();
+      MessageCli.OPERATOR_ENTRY.printMessage(details.get(0), details.get(0), details.get(0));
     }
   }
 
@@ -74,11 +83,13 @@ public class OperatorManagementSystem {
     String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
 
     // get full location name
-    String fullLoc = Location.fromString(location).getFullName();
+    String fullLoc = location.getFullName();
 
     // print message with all operator properties
     MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
+
     Operator newOp = new Operator(abbrevName, idOp, fullLoc);
+    opList.add(newOp);
   }
 
   public void viewActivities(String operatorId) {
