@@ -48,8 +48,11 @@ public class OperatorManagementSystem {
     // set foundOps to num of operators found
     // print ops found + message
     ArrayList<Operator> matches = new ArrayList<>();
-    // matches.add(opList.get(0));
-    int foundOps = 5;
+    for (Operator op : opList) {
+      matches.add(op);
+    }
+
+    int foundOps = 8;
 
     // display correct message
     switch (foundOps) {
@@ -63,14 +66,11 @@ public class OperatorManagementSystem {
         MessageCli.OPERATORS_FOUND.printMessage("are", Integer.toString(foundOps), "s", ":");
         break;
     }
-    for (int i = 0; i < 4; i++) {
-      MessageCli.OPERATOR_ENTRY.printMessage("testName", "testId", "testLoc");
-    }
-    /*
+
     for (Operator match : matches) {
       ArrayList<String> details = match.getDetails();
-      MessageCli.OPERATOR_ENTRY.printMessage(details.get(0), details.get(0), details.get(0));
-    }*/
+      MessageCli.OPERATOR_ENTRY.printMessage(details.get(0), details.get(1), details.get(2));
+    }
   }
 
   public void createOperator(String operatorName, String location) {
@@ -82,6 +82,7 @@ public class OperatorManagementSystem {
     for (String word : words) {
       abbrevName = abbrevName + word.charAt(0);
     }
+    abbrevName = abbrevName.toUpperCase();
 
     // get operator id
     String numOp = idNum("000");
@@ -94,7 +95,7 @@ public class OperatorManagementSystem {
     // print message with all operator properties
     MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
 
-    Operator newOp = new Operator(abbrevName, idOp, fullLoc);
+    Operator newOp = new Operator(operatorName, idOp, fullLoc);
     opList.add(newOp);
   }
 
