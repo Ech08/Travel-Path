@@ -1,6 +1,7 @@
 package nz.ac.auckland.se281;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import nz.ac.auckland.se281.Types.Location;
 
@@ -77,9 +78,24 @@ public class OperatorManagementSystem {
       for (Operator op : opList) {
         boolean match = false;
         ArrayList<String> detList = op.getDetails();
-        for (int i = 0; i < 3; i++) {
-          System.out.println(detList.get(i));
-          if (detList.get(i).equalsIgnoreCase(keyword)) {
+        ArrayList<String> parts = new ArrayList<>();
+
+        // name
+        String[] part1 = detList.get(0).split(" ");
+        parts.addAll(Arrays.asList(part1));
+
+        // id
+        String[] part2 = detList.get(1).split("-");
+        parts.addAll(Arrays.asList(part2));
+
+        // location
+        String[] part3 = detList.get(2).split(" ");
+        parts.addAll(Arrays.asList(part3));
+
+        // check if keyword matches
+        for (int i = 0; i < parts.size(); i++) {
+          System.out.println(parts.get(i));
+          if (parts.get(i).equalsIgnoreCase(keyword)) {
             match = true;
           }
         }
@@ -103,6 +119,7 @@ public class OperatorManagementSystem {
         break;
     }
 
+    // print operators found
     for (Operator match : matches) {
       ArrayList<String> details = match.getDetails();
       MessageCli.OPERATOR_ENTRY.printMessage(details.get(0), details.get(1), details.get(2));
