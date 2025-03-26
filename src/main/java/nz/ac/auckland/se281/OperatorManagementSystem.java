@@ -85,28 +85,26 @@ public class OperatorManagementSystem {
         foundOps++;
       }
     } else {
+      String keywords[] = keyword.split(" ");
+
       for (Operator op : opList) {
         boolean match = false;
         ArrayList<String> detList = op.getDetails();
         ArrayList<String> parts = new ArrayList<>();
 
-        // name
-        String[] part1 = detList.get(0).split(" ");
+        String[] part1 = detList.get(0).split(" "); // name
         parts.addAll(Arrays.asList(part1));
-
-        // id
-        String[] part2 = detList.get(1).split("-");
+        String[] part2 = detList.get(1).split("-"); // id
         parts.addAll(Arrays.asList(part2));
-
-        // location
-        String[] part3 = detList.get(2).split(" ");
+        String[] part3 = detList.get(2).split(" "); // location
         parts.addAll(Arrays.asList(part3));
 
         // check if keyword matches
-        for (int i = 0; i < parts.size(); i++) {
-          System.out.println(parts.get(i));
-          if (parts.get(i).equalsIgnoreCase(keyword)) {
-            match = true;
+        for (String word : keywords) {
+          for (int i = 0; i < parts.size(); i++) {
+            if (parts.get(i).toLowerCase().contains(word.toLowerCase())) {
+              match = true;
+            }
           }
         }
         if (match) {
