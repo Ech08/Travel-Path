@@ -43,6 +43,16 @@ public class OperatorManagementSystem {
     return result;
   }
 
+  public Operator opFromString(String text) {
+    for (Operator op : opList) {
+      ArrayList<String> det = op.getDetails();
+      if (det.get(0).equalsIgnoreCase(text)) {
+        return op;
+      }
+    }
+    return null;
+  }
+
   // Do not change the parameters of the constructor
   public OperatorManagementSystem() {
     this.opList = new ArrayList<>();
@@ -143,21 +153,22 @@ public class OperatorManagementSystem {
     String currentNum = locNums.get(abbrevLoc);
 
     // check if operator already exists
-    if ((!currentNum.equals("000")) /*&& (opList.contains(operatorName))*/) {
+    if ((!currentNum.equals("000")) && (opList.contains(opFromString(operatorName)))) {
       MessageCli.OPERATOR_NOT_CREATED_ALREADY_EXISTS_SAME_LOCATION.printMessage(
           operatorName, fullLoc);
-    } else {
-      // get operator id
-      String numOp = idNum(currentNum);
-      locNums.put(abbrevLoc, numOp);
-      String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
-
-      // print message with all operator properties
-      MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
-
-      Operator newOp = new Operator(operatorName, idOp, numOp, fullLoc);
-      opList.add(newOp);
+      return;
     }
+
+    // get operator id
+    String numOp = idNum(currentNum);
+    locNums.put(abbrevLoc, numOp);
+    String idOp = abbrevName + "-" + abbrevLoc + "-" + numOp;
+
+    // print message with all operator properties
+    MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
+
+    Operator newOp = new Operator(operatorName, idOp, numOp, fullLoc);
+    opList.add(newOp);
   }
 
   public void viewActivities(String operatorId) {
