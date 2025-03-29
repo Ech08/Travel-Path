@@ -88,8 +88,6 @@ public class OperatorManagementSystem {
       keyword = keyword.trim();
       String keywords[] = keyword.split(" ");
 
-      for (String x : keywords) {}
-
       for (Operator op : opList) {
         boolean match = false;
         ArrayList<String> detList = op.getDetails();
