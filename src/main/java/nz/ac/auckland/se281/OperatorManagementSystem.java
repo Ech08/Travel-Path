@@ -69,22 +69,16 @@ public class OperatorManagementSystem {
   }
 
   public void searchOperators(String keyword) {
-    // look for keyword
-    // set foundOps to num of operators found (done)
-    // print ops found + message (done)
-
     int foundOps = 0;
-
-    // if searching * add all operators to matches list
     ArrayList<Operator> matches = new ArrayList<>();
 
-    // add all operators to list if searching '*', else search for keyword in operator details
+    // add all operators to matches list if searching '*'
     if (keyword.equalsIgnoreCase("*")) {
       for (Operator op : opList) {
         matches.add(op);
         foundOps++;
       }
-    } else {
+    } else { // else search for keyword in operator details
       keyword = keyword.trim();
       String keywords[] = keyword.split(" ");
 
