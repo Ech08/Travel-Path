@@ -85,7 +85,10 @@ public class OperatorManagementSystem {
         foundOps++;
       }
     } else {
+      keyword = keyword.trim();
       String keywords[] = keyword.split(" ");
+
+      for (String x : keywords) {}
 
       for (Operator op : opList) {
         boolean match = false;
@@ -101,10 +104,13 @@ public class OperatorManagementSystem {
 
         // check if keyword matches
         for (String word : keywords) {
-          for (int i = 0; i < parts.size(); i++) {
-            if (parts.get(i).toLowerCase().contains(word.toLowerCase())) {
-              match = true;
+          if (!word.isBlank()) {
+            for (int i = 0; i < parts.size(); i++) {
+              if (parts.get(i).toLowerCase().contains(word.toLowerCase())) {
+                match = true;
+              }
             }
+            System.out.println(word);
           }
         }
         if (match) {
@@ -113,7 +119,6 @@ public class OperatorManagementSystem {
         }
       }
     }
-
     // display correct message
     switch (foundOps) {
       case 0:
@@ -135,6 +140,12 @@ public class OperatorManagementSystem {
   }
 
   public void createOperator(String operatorName, String location) {
+    // checks if operator name is valid before continuing
+    if (operatorName.length() < 3) {
+      MessageCli.OPERATOR_NOT_CREATED_INVALID_OPERATOR_NAME.printMessage(operatorName);
+      return;
+    }
+
     // get operatorName abbreviation
     String words[] = operatorName.split(" ");
     String abbrevName = "";
@@ -145,8 +156,14 @@ public class OperatorManagementSystem {
     }
     abbrevName = abbrevName.toUpperCase();
 
+    // check if location exists before continuing
+    if (Location.fromString(location) == null) {
+      MessageCli.OPERATOR_NOT_CREATED_INVALID_LOCATION.printMessage(location);
+      return;
+    }
     // get full and abbreviated location name, and current loc operator count
     String fullLoc = Location.fromString(location).getFullName();
+
     String abbrevLoc = Location.fromString(location).getLocationAbbreviation();
     String currentNum = locNums.get(abbrevLoc);
 
