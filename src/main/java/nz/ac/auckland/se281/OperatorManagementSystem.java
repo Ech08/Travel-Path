@@ -78,6 +78,8 @@ public class OperatorManagementSystem {
         matches.add(op);
         foundOps++;
       }
+    } else if (keyword.equals("|")) { // if searching for | nothing should be found
+      foundOps = 0;
     } else { // else search for keyword in operator details
       keyword = keyword.trim();
       String keywords[] = keyword.split(" ");
@@ -89,10 +91,10 @@ public class OperatorManagementSystem {
 
         String[] part1 = detList.get(0).split(" "); // name
         parts.addAll(Arrays.asList(part1));
-        String[] part2 = detList.get(1).split("-"); // id
-        parts.addAll(Arrays.asList(part2));
         String[] part3 = detList.get(2).split(" "); // location
         parts.addAll(Arrays.asList(part3));
+        String abbrevLoc = Location.fromString(part3[0]).getLocationAbbreviation();
+        parts.add(abbrevLoc);
 
         // check if keyword matches
         for (String word : keywords) {
@@ -102,7 +104,6 @@ public class OperatorManagementSystem {
                 match = true;
               }
             }
-            System.out.println(word);
           }
         }
         if (match) {
