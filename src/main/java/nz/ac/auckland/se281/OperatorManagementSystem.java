@@ -7,10 +7,23 @@ import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
 
+  // start lists of operators, activities, and keep track of how many for each loc, op respectively
   private ArrayList<Operator> opList = new ArrayList<>();
   private HashMap<String, String> locNums = new HashMap<String, String>();
+  private ArrayList<Activity> actList = new ArrayList<>();
+  private HashMap<String, String> opNums = new HashMap<String, String>();
 
   // custom methods:
+  public String opIdToName(String id) {
+    for (Operator op : opList) {
+      ArrayList<String> det = op.getDetails();
+      if (id.equals(det.get(1))) {
+        return det.get(0);
+      }
+    }
+    return null;
+  }
+
   public String idNum(String num) {
     // increments input int by 1 and returns 3 digit string
     char digits[] = num.toCharArray();
@@ -184,7 +197,24 @@ public class OperatorManagementSystem {
   }
 
   public void createActivity(String activityName, String activityType, String operatorId) {
-    // TODO implement
+    // check if valid name DONE
+    // check if valid operator DONE
+    // create id - get op id, add extra num
+    // create new activity
+    // print message
+
+    // checks if operator name is valid before continuing
+    if (activityName.length() < 3) {
+      MessageCli.ACTIVITY_NOT_CREATED_INVALID_ACTIVITY_NAME.printMessage(activityName);
+      return;
+    }
+
+    // checks if operator ID exists
+    Operator op = opFromString(operatorId);
+    if (!opList.contains(op)) {
+      MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(operatorId);
+      return;
+    }
   }
 
   public void searchActivities(String keyword) {
