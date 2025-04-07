@@ -3,6 +3,7 @@ package nz.ac.auckland.se281;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
 public class OperatorManagementSystem {
@@ -199,9 +200,9 @@ public class OperatorManagementSystem {
   public void createActivity(String activityName, String activityType, String operatorId) {
     // check if valid name DONE
     // check if valid operator DONE
-    // create id - get op id, add extra num
+    // create id - get op id, add extra num DONE
     // create new activity
-    // print message
+    // print message DONE
 
     // checks if operator name is valid before continuing
     if (activityName.length() < 3) {
@@ -215,6 +216,26 @@ public class OperatorManagementSystem {
       MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(operatorId);
       return;
     }
+
+    // set type
+    ActivityType type = ActivityType.fromString(activityType);
+    String actType = type.toString();
+    if (type == ActivityType.OTHER) {
+      actType = "other";
+    }
+
+    // set id
+    String opName = opIdToName(operatorId);
+    String nextNum = idNum(opNums.get(opName));
+    String actId = operatorId + "-" + nextNum;
+
+    // print success message
+    MessageCli.ACTIVITY_CREATED.printMessage(activityName, actId, actType, opName);
+
+    // create activity
+    Location loc = op.getLoc();
+    Activity newAct = new Activity(activityName, type, loc.toString(), actId);
+    actList.add(newAct);
   }
 
   public void searchActivities(String keyword) {
