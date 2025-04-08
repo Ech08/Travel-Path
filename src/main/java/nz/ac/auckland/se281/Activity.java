@@ -1,6 +1,5 @@
 package nz.ac.auckland.se281;
 
-import java.util.ArrayList;
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
@@ -8,30 +7,46 @@ public class Activity {
   private String name;
   private ActivityType type;
   private Location loc;
-  private String locName;
+  private String fullLoc;
   private String id;
+  private Operator operator;
 
   // constructor
-  public Activity(String name, ActivityType type, String loc, String id) {
+  public Activity(String name, ActivityType type, String loc, Operator op, String id) {
     this.name = name;
     this.type = type;
-    this.locName = loc;
+    this.operator = op;
+    this.fullLoc = Types.Location.fromString(loc).getFullName();
     this.id = id;
     this.loc = Types.Location.fromString(loc);
-  }
-
-  // gets list of details
-  public ArrayList<String> getDetails() {
-    ArrayList<String> details = new ArrayList<>();
-    details.add(this.name);
-    details.add(this.type.toString());
-    details.add(this.id);
-    details.add(this.locName);
-    return details;
   }
 
   @Override
   public String toString() {
     return this.name;
+  }
+
+  public Location getLoc() {
+    return this.loc;
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public String getLocFull() {
+    return this.fullLoc;
+  }
+
+  public ActivityType getType() {
+    return this.type;
+  }
+
+  public Operator getOp() {
+    return this.operator;
   }
 }
