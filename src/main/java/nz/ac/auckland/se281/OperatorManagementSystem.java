@@ -17,9 +17,8 @@ public class OperatorManagementSystem {
   // custom methods:
   public String opIdToName(String id) {
     for (Operator op : opList) {
-      ArrayList<String> det = op.getDetails();
-      if (id.equals(det.get(1))) {
-        return det.get(0);
+      if (id.equals(op.getId())) {
+        return op.getNameFull();
       }
     }
     return null;
@@ -59,12 +58,32 @@ public class OperatorManagementSystem {
 
   public Operator opFromString(String text) {
     for (Operator op : opList) {
-      ArrayList<String> det = op.getDetails();
-      if (det.get(0).equalsIgnoreCase(text)) {
+      if (op.getNameFull().equalsIgnoreCase(text)) {
         return op;
       }
     }
     return null;
+  }
+
+  public Operator fromId(String id) {
+    String[] idList = id.split("-");
+    System.out.println(idList[0]);
+    String abbrevLoc = idList[0];
+    Operator op = opFromString(abbrevLoc);
+    return op;
+  }
+
+  public String getAbbrev(String name) {
+    // get name abbreviation
+    String words[] = name.split(" ");
+    String abbrevName = "";
+
+    // add the first letter of each word in words to abbrevName
+    for (String word : words) {
+      abbrevName = abbrevName + word.charAt(0);
+    }
+    abbrevName = abbrevName.toUpperCase();
+    return abbrevName;
   }
 
   // Do not change the parameters of the constructor
@@ -100,14 +119,13 @@ public class OperatorManagementSystem {
 
       for (Operator op : opList) {
         boolean match = false;
-        ArrayList<String> detList = op.getDetails();
         ArrayList<String> parts = new ArrayList<>();
 
-        String[] part1 = detList.get(0).split(" "); // name
+        String[] part1 = op.getNameFull().split(" "); // name
         parts.addAll(Arrays.asList(part1));
-        String[] part3 = detList.get(2).split(" "); // location
-        parts.addAll(Arrays.asList(part3));
-        String abbrevLoc = Location.fromString(part3[0]).getLocationAbbreviation();
+        String[] part2 = op.getLocFull().split(" "); // location (full)
+        parts.addAll(Arrays.asList(part2));
+        String abbrevLoc = (op.getLoc()).getLocationAbbreviation(); // location (abbrev)
         parts.add(abbrevLoc);
 
         // check if keyword matches
@@ -141,8 +159,8 @@ public class OperatorManagementSystem {
 
     // print operators found
     for (Operator match : matches) {
-      ArrayList<String> details = match.getDetails();
-      MessageCli.OPERATOR_ENTRY.printMessage(details.get(0), details.get(1), details.get(2));
+      MessageCli.OPERATOR_ENTRY.printMessage(
+          match.getNameFull(), match.getId(), match.getLocFull());
     }
   }
 
@@ -153,15 +171,8 @@ public class OperatorManagementSystem {
       return;
     }
 
-    // get operatorName abbreviation
-    String words[] = operatorName.split(" ");
-    String abbrevName = "";
-
-    // add the first letter of each word in words to abbrevName
-    for (String word : words) {
-      abbrevName = abbrevName + word.charAt(0);
-    }
-    abbrevName = abbrevName.toUpperCase();
+    // get name initials
+    String abbrevName = getAbbrev(operatorName);
 
     // check if location exists before continuing
     if (Location.fromString(location) == null) {
@@ -189,8 +200,9 @@ public class OperatorManagementSystem {
     // print message with all operator properties
     MessageCli.OPERATOR_CREATED.printMessage(operatorName, idOp, fullLoc);
 
-    Operator newOp = new Operator(operatorName, idOp, numOp, fullLoc);
+    Operator newOp = new Operator(operatorName, idOp, numOp, abbrevLoc);
     opList.add(newOp);
+    newOp.setNameAbbrev(abbrevName);
   }
 
   public void viewActivities(String operatorId) {
@@ -211,7 +223,9 @@ public class OperatorManagementSystem {
     }
 
     // checks if operator ID exists
-    Operator op = opFromString(operatorId);
+    Operator op = fromId(operatorId);
+    System.out.println(operatorId);
+    System.out.println(op.getNameFull());
     if (!opList.contains(op)) {
       MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(operatorId);
       return;
@@ -236,6 +250,10 @@ public class OperatorManagementSystem {
     Location loc = op.getLoc();
     Activity newAct = new Activity(activityName, type, loc.toString(), actId);
     actList.add(newAct);
+
+    for (Activity a : actList) {
+      System.out.println(a.toString());
+    }
   }
 
   public void searchActivities(String keyword) {

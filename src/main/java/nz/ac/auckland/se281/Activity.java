@@ -29,4 +29,9 @@ public class Activity {
     details.add(this.locName);
     return details;
   }
+
+  @Override
+  public String toString() {
+    return this.name;
+  }
 }

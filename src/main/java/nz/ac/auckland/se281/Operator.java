@@ -1,12 +1,12 @@
 package nz.ac.auckland.se281;
 
-import java.util.ArrayList;
 import nz.ac.auckland.se281.Types.Location;
 
 public class Operator {
   private String id;
   private String idNum;
   private String fullName;
+  private String abbrevName;
   private String fullLoc;
   private Location loc;
 
@@ -15,20 +15,31 @@ public class Operator {
     this.id = id;
     this.idNum = idNum;
     this.fullName = name;
-    this.fullLoc = loc;
+    this.fullLoc = Types.Location.fromString(loc).getFullName();
     this.loc = Types.Location.fromString(loc);
-  }
-
-  // gets list of details
-  public ArrayList<String> getDetails() {
-    ArrayList<String> details = new ArrayList<>();
-    details.add(this.fullName);
-    details.add(this.id);
-    details.add(this.fullLoc);
-    return details;
   }
 
   public Location getLoc() {
     return this.loc;
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public String getNameAbbrev() {
+    return this.abbrevName;
+  }
+
+  public String getNameFull() {
+    return this.fullName;
+  }
+
+  public String getLocFull() {
+    return this.fullLoc;
+  }
+
+  public void setNameAbbrev(String name) {
+    this.abbrevName = name;
   }
 }
