@@ -9,6 +9,7 @@ public class Operator {
   private String abbrevName;
   private String fullLoc;
   private Location loc;
+  private String currentNum;
 
   // initialises operator
   public Operator(String name, String id, String idNum, String loc) {
@@ -17,6 +18,7 @@ public class Operator {
     this.fullName = name;
     this.fullLoc = Types.Location.fromString(loc).getFullName();
     this.loc = Types.Location.fromString(loc);
+    this.currentNum = "000";
   }
 
   public Location getLoc() {
@@ -25,6 +27,10 @@ public class Operator {
 
   public String getId() {
     return this.id;
+  }
+
+  public String getIdNum() {
+    return this.idNum;
   }
 
   public String getNameAbbrev() {
@@ -41,5 +47,13 @@ public class Operator {
 
   public void setNameAbbrev(String name) {
     this.abbrevName = name;
+  }
+
+  public String getNum() {
+    return this.currentNum;
+  }
+
+  public void setNum(String num) {
+    this.currentNum = num;
   }
 }

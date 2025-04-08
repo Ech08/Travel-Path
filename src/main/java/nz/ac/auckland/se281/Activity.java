@@ -1,5 +1,6 @@
 package nz.ac.auckland.se281;
 
+
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
@@ -12,13 +13,13 @@ public class Activity {
   private Operator operator;
 
   // constructor
-  public Activity(String name, ActivityType type, String loc, Operator op, String id) {
+  public Activity(String name, ActivityType type, Location loc, Operator op, String id) {
     this.name = name;
     this.type = type;
     this.operator = op;
-    this.fullLoc = Types.Location.fromString(loc).getFullName();
+    this.loc = loc;
+    this.fullLoc = loc.getFullName();
     this.id = id;
-    this.loc = Types.Location.fromString(loc);
   }
 
   @Override

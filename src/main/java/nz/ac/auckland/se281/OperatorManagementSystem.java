@@ -12,7 +12,6 @@ public class OperatorManagementSystem {
   private ArrayList<Operator> opList = new ArrayList<>();
   private HashMap<String, String> locNums = new HashMap<String, String>();
   private ArrayList<Activity> actList = new ArrayList<>();
-  private HashMap<String, String> opNums = new HashMap<String, String>();
 
   // custom methods:
   public String nameFromOpId(String id) {
@@ -67,10 +66,18 @@ public class OperatorManagementSystem {
 
   public Operator opFromId(String id) {
     String[] idList = id.split("-");
-    System.out.println(idList[0]);
-    String abbrevLoc = idList[0];
-    Operator op = opFromString(abbrevLoc);
-    return op;
+    String abbrevLoc = idList[1];
+    String idNum = idList[2];
+
+    Operator operator = null;
+    for (Operator op : opList) {
+      if ((idNum.equals(op.getIdNum()))) {
+        if (abbrevLoc.equals(op.getLoc().getLocationAbbreviation())) {
+          operator = op;
+        }
+      }
+    }
+    return operator;
   }
 
   public String getAbbrev(String name) {
@@ -89,11 +96,13 @@ public class OperatorManagementSystem {
   public boolean containsOp(Operator op) {
     for (Operator testOp : opList) {
       if (testOp.equals(op)) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
+
+  // -----------------------------------------------------------------
 
   // Do not change the parameters of the constructor
   public OperatorManagementSystem() {
@@ -228,13 +237,7 @@ public class OperatorManagementSystem {
 
     // checks if operator ID exists
     Operator op = opFromId(operatorId);
-    // for(Operator testOp: opList){
-    //   if (testOp.equals(op)){
-    //     return false;
-    //   }
-    // }
-    // else {return true;}
-    if (containsOp(op)) {
+    if (!containsOp(op)) {
       MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(operatorId);
       return;
     }
@@ -248,20 +251,21 @@ public class OperatorManagementSystem {
 
     // set id
     String opName = nameFromOpId(operatorId);
-    String nextNum = idNum(opNums.get(opName));
+    String nextNum = idNum(op.getNum());
     String actId = operatorId + "-" + nextNum;
+    op.setNum(nextNum);
 
     // print success message
     MessageCli.ACTIVITY_CREATED.printMessage(activityName, actId, actType, opName);
 
     // create activity
     Location loc = op.getLoc();
-    Activity newAct = new Activity(activityName, type, loc.toString(), op, actId);
+    Activity newAct = new Activity(activityName, type, loc, op, actId);
     actList.add(newAct);
 
-    for (Activity a : actList) {
-      System.out.println(a.toString());
-    }
+    // for (Activity a : actList) {
+    //   System.out.println(a.toString());
+    // }
   }
 
   public void searchActivities(String keyword) {
