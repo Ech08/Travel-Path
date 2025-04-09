@@ -55,6 +55,10 @@ public class OperatorManagementSystem {
     return result;
   }
 
+  public String idNumRemoveZero(String id) {
+    return Integer.toString(Integer.parseInt(id) + 1);
+  }
+
   public Operator opFromString(String text) {
     for (Operator op : opList) {
       if (op.getNameFull().equalsIgnoreCase(text)) {
@@ -100,6 +104,15 @@ public class OperatorManagementSystem {
       }
     }
     return false;
+  }
+
+  public boolean opExists(String id) {
+    Operator op = opFromId(id);
+    if (!containsOp(op)) {
+      MessageCli.OPERATOR_NOT_FOUND.printMessage(id);
+      return false;
+    }
+    return true;
   }
 
   // -----------------------------------------------------------------
@@ -224,7 +237,33 @@ public class OperatorManagementSystem {
   }
 
   public void viewActivities(String operatorId) {
-    // TODO implement
+    // check if operator exists
+    boolean exists = opExists(operatorId);
+    if (!exists) {
+      return;
+    }
+    Operator op = opFromId(operatorId);
+
+    // check if op has activities
+    if (op.getNum() == "000") {
+      MessageCli.ACTIVITIES_FOUND.printMessage("are", "no", "ies", ".");
+      return;
+    }
+
+    String num = idNumRemoveZero(op.getIdNum());
+
+    // print found message
+    if (op.getNum() == "001") {
+      MessageCli.ACTIVITIES_FOUND.printMessage("is", "1", "y", ":");
+      return;
+    }
+    MessageCli.ACTIVITIES_FOUND.printMessage("are", num, "ies", ":");
+
+    // if op has activities, add them to a printed list
+    for (Activity act : actList) {
+      MessageCli.ACTIVITY_ENTRY.printMessage(
+          act.getName(), act.getId(), act.getType().toString(), op.getNameFull());
+    }
   }
 
   public void createActivity(String activityName, String activityType, String operatorId) {
@@ -236,11 +275,10 @@ public class OperatorManagementSystem {
     }
 
     // checks if operator ID exists
-    Operator op = opFromId(operatorId);
-    if (!containsOp(op)) {
-      MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(operatorId);
+    if (opExists(operatorId) == false) {
       return;
     }
+    Operator op = opFromId(operatorId);
 
     // set type
     ActivityType type = ActivityType.fromString(activityType);
@@ -262,14 +300,38 @@ public class OperatorManagementSystem {
     Location loc = op.getLoc();
     Activity newAct = new Activity(activityName, type, loc, op, actId);
     actList.add(newAct);
-
-    // for (Activity a : actList) {
-    //   System.out.println(a.toString());
-    // }
   }
 
   public void searchActivities(String keyword) {
-    // TODO implement
+    int foundActs = 0;
+    ArrayList<Activity> matches = new ArrayList<>();
+
+    // add all activities to matches list if searching '*'
+    if (keyword.equalsIgnoreCase("*")) {
+      for (Activity act : actList) {
+        matches.add(act);
+        foundActs++;
+      }
+    }
+
+    // print message
+    switch (foundActs) {
+      case 0:
+        MessageCli.ACTIVITIES_FOUND.printMessage("are", "no", "ies", ".");
+        break;
+      case 1:
+        MessageCli.ACTIVITIES_FOUND.printMessage("is", "1", "y", ":");
+        break;
+      default:
+        MessageCli.ACTIVITIES_FOUND.printMessage("are", Integer.toString(foundActs), "s", ":");
+        break;
+    }
+
+    // print activities found
+    for (Activity act : matches) {
+      MessageCli.ACTIVITY_ENTRY.printMessage(
+          act.getName(), act.getId(), act.getType().toString(), act.getOp().getNameFull());
+    }
   }
 
   public void addPublicReview(String activityId, String[] options) {
