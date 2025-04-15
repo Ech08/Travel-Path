@@ -109,7 +109,7 @@ public class OperatorManagementSystem {
   public boolean opExists(String id) {
     Operator op = opFromId(id);
     if (!containsOp(op)) {
-      MessageCli.OPERATOR_NOT_FOUND.printMessage(id);
+      // MessageCli.OPERATOR_NOT_FOUND.printMessage(id);
       return false;
     }
     return true;
@@ -240,6 +240,7 @@ public class OperatorManagementSystem {
     // check if operator exists
     boolean exists = opExists(operatorId);
     if (!exists) {
+      MessageCli.OPERATOR_NOT_FOUND.printMessage(operatorId);
       return;
     }
     Operator op = opFromId(operatorId);
@@ -276,6 +277,7 @@ public class OperatorManagementSystem {
 
     // checks if operator ID exists
     if (opExists(operatorId) == false) {
+      MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(operatorId);
       return;
     }
     Operator op = opFromId(operatorId);
