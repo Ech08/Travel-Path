@@ -307,12 +307,42 @@ public class OperatorManagementSystem {
   public void searchActivities(String keyword) {
     int foundActs = 0;
     ArrayList<Activity> matches = new ArrayList<>();
+    keyword = keyword.toLowerCase();
 
     // add all activities to matches list if searching '*'
     if (keyword.equalsIgnoreCase("*")) {
       for (Activity act : actList) {
         matches.add(act);
         foundActs++;
+      }
+    } else {
+      // if keyword is found in activity name or type or location
+      for (Activity act : actList) {
+        boolean match = false;
+        ArrayList<String> parts = new ArrayList<>();
+        Operator op = act.getOp();
+
+        String[] part1 = act.getName().split(" "); // name
+        parts.addAll(Arrays.asList(part1));
+        String part2 = act.getType().toString(); // type
+        parts.add(part2);
+        String[] part3 = op.getLocFull().split(" "); // location (full)
+        parts.addAll(Arrays.asList(part3));
+        String abbrevLoc = (op.getLoc()).getLocationAbbreviation(); // location (abbrev)
+        parts.add(abbrevLoc);
+
+        if (!keyword.isBlank()) {
+          for (int i = 0; i < parts.size(); i++) {
+            if (parts.get(i).toLowerCase().contains(keyword)) {
+              match = true;
+            }
+          }
+        }
+
+        if (match) {
+          matches.add(act);
+          foundActs++;
+        }
       }
     }
 
@@ -325,7 +355,7 @@ public class OperatorManagementSystem {
         MessageCli.ACTIVITIES_FOUND.printMessage("is", "1", "y", ":");
         break;
       default:
-        MessageCli.ACTIVITIES_FOUND.printMessage("are", Integer.toString(foundActs), "s", ":");
+        MessageCli.ACTIVITIES_FOUND.printMessage("are", Integer.toString(foundActs), "ies", ":");
         break;
     }
 
