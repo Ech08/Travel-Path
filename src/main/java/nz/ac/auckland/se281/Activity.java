@@ -1,6 +1,5 @@
 package nz.ac.auckland.se281;
 
-
 import nz.ac.auckland.se281.Types.ActivityType;
 import nz.ac.auckland.se281.Types.Location;
 
@@ -11,6 +10,7 @@ public class Activity {
   private String fullLoc;
   private String id;
   private Operator operator;
+  private String currentNum;
 
   // constructor
   public Activity(String name, ActivityType type, Location loc, Operator op, String id) {
@@ -20,6 +20,7 @@ public class Activity {
     this.loc = loc;
     this.fullLoc = loc.getFullName();
     this.id = id;
+    this.currentNum = "000";
   }
 
   @Override
@@ -49,5 +50,13 @@ public class Activity {
 
   public Operator getOp() {
     return this.operator;
+  }
+
+  public String getNum() {
+    return this.currentNum;
+  }
+
+  public void setNum(String num) {
+    this.currentNum = num;
   }
 }

@@ -4,7 +4,8 @@ public class Expert extends Review {
   boolean recommend;
   String image;
 
-  public Expert(String name, int rating, String text, String id, String email, boolean recommend) {
+  public Expert(
+      String name, String rating, String text, String id, String email, boolean recommend) {
     super(name, rating, text, id);
     this.recommend = recommend;
   }

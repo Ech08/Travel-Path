@@ -12,6 +12,7 @@ public class OperatorManagementSystem {
   private ArrayList<Operator> opList = new ArrayList<>();
   private HashMap<String, String> locNums = new HashMap<String, String>();
   private ArrayList<Activity> actList = new ArrayList<>();
+  private ArrayList<Review> revList = new ArrayList<>();
 
   // custom methods:
   public String nameFromOpId(String id) {
@@ -69,19 +70,23 @@ public class OperatorManagementSystem {
   }
 
   public Operator opFromId(String id) {
-    String[] idList = id.split("-");
-    String abbrevLoc = idList[1];
-    String idNum = idList[2];
-
     Operator operator = null;
     for (Operator op : opList) {
-      if ((idNum.equals(op.getIdNum()))) {
-        if (abbrevLoc.equals(op.getLoc().getLocationAbbreviation())) {
-          operator = op;
-        }
+      if (id.equals(op.getId())) {
+        operator = op;
       }
     }
     return operator;
+  }
+
+  public Activity actFromId(String id) {
+    Activity activity = null;
+    for (Activity act : actList) {
+      if (id.equals(act.getId())) {
+        activity = act;
+      }
+    }
+    return activity;
   }
 
   public String getAbbrev(String name) {
@@ -109,7 +114,23 @@ public class OperatorManagementSystem {
   public boolean opExists(String id) {
     Operator op = opFromId(id);
     if (!containsOp(op)) {
-      // MessageCli.OPERATOR_NOT_FOUND.printMessage(id);
+      return false;
+    }
+    return true;
+  }
+
+  public boolean containsAct(Activity act) {
+    for (Activity testAct : actList) {
+      if (testAct.equals(act)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean actExists(String id) {
+    Activity act = actFromId(id);
+    if (!containsAct(act)) {
       return false;
     }
     return true;
@@ -235,6 +256,8 @@ public class OperatorManagementSystem {
     opList.add(newOp);
     newOp.setNameAbbrev(abbrevName);
   }
+
+  // activities
 
   public void viewActivities(String operatorId) {
     // check if operator exists
@@ -366,8 +389,40 @@ public class OperatorManagementSystem {
     }
   }
 
+  // reviews
+
   public void addPublicReview(String activityId, String[] options) {
-    // TODO implement
+
+    // check id activity exists
+    if (actExists(activityId) == false) {
+      MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(activityId);
+      return;
+    }
+    Activity act = actFromId(activityId);
+
+    // check rating is appropriate, if not set as closest number
+    String rating = options[2];
+    int ratingInt = Integer.parseInt(rating);
+
+    if (ratingInt > 5) {
+      rating = "5";
+    } else if (ratingInt < 1) {
+      rating = "0";
+    } else {
+      rating = Integer.toString(ratingInt);
+    }
+
+    // make id
+    String nextNum = idNum(act.getNum());
+    String revId = activityId + "-" + nextNum;
+    act.setNum(nextNum);
+
+    // amke review
+    Review newReview = new Public(options[0], options[2], options[1], revId, options[3]);
+    revList.add(newReview);
+
+    // print success message
+    MessageCli.REVIEW_ADDED.printMessage("Public", revId, act.getName());
   }
 
   public void addPrivateReview(String activityId, String[] options) {

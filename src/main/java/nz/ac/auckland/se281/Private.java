@@ -8,7 +8,7 @@ public class Private extends Review {
 
   public Private(
       String name,
-      int rating,
+      String rating,
       String text,
       String id,
       String email,

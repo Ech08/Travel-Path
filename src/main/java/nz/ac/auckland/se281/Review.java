@@ -2,12 +2,12 @@ package nz.ac.auckland.se281;
 
 public abstract class Review {
   protected String name;
-  protected int rating;
+  protected String rating;
   protected String text;
   protected String actId;
   protected String id;
 
-  public Review(String name, int rating, String text, String id) {
+  public Review(String name, String rating, String text, String id) {
     this.name = name;
     this.rating = rating;
     this.text = text;
@@ -18,7 +18,7 @@ public abstract class Review {
     return this.name;
   }
 
-  public int getRating() {
+  public String getRating() {
     return this.rating;
   }
 
