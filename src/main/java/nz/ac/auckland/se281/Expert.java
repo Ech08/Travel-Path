@@ -1,0 +1,19 @@
+package nz.ac.auckland.se281;
+
+public class Expert extends Review {
+  boolean recommend;
+  String image;
+
+  public Expert(String name, int rating, String text, String id, String email, boolean recommend) {
+    super(name, rating, text, id);
+    this.recommend = recommend;
+  }
+
+  public boolean getRecomend() {
+    return this.recommend;
+  }
+
+  public void setImage(String i) {
+    this.image = i;
+  }
+}
