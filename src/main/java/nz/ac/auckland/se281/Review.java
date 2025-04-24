@@ -41,4 +41,6 @@ public abstract class Review {
   public void setActId(String id) {
     this.actId = id;
   }
+
+  public abstract String getType();
 }

@@ -5,6 +5,7 @@ public class Private extends Review {
   private boolean followUp;
   private boolean resolved;
   private String resolveText = "-";
+  private String type = "Private";
 
   public Private(
       String name,
@@ -38,5 +39,10 @@ public class Private extends Review {
 
   public void setResolved(boolean i) {
     this.resolved = i;
+  }
+
+  @Override
+  public String getType() {
+    return this.type;
   }
 }

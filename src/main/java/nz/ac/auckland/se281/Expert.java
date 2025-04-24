@@ -3,6 +3,7 @@ package nz.ac.auckland.se281;
 public class Expert extends Review {
   private boolean recommend;
   private String image;
+  private String type = "Expert";
 
   public Expert(
       String name, String rating, String text, String id, String email, boolean recommend) {
@@ -16,5 +17,10 @@ public class Expert extends Review {
 
   public void setImage(String i) {
     this.image = i;
+  }
+
+  @Override
+  public String getType() {
+    return this.type;
   }
 }

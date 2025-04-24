@@ -57,7 +57,7 @@ public class OperatorManagementSystem {
   }
 
   public String idNumRemoveZero(String id) {
-    return Integer.toString(Integer.parseInt(id) + 1);
+    return Integer.toString(Integer.parseInt(id));
   }
 
   public Operator opFromString(String text) {
@@ -274,14 +274,14 @@ public class OperatorManagementSystem {
       return;
     }
 
-    String num = idNumRemoveZero(op.getIdNum());
+    String num = idNumRemoveZero(idNum(op.getIdNum()));
 
     // print found message
     if (op.getNum() == "001") {
       MessageCli.ACTIVITIES_FOUND.printMessage("is", "1", "y", ":");
-      return;
+    } else {
+      MessageCli.ACTIVITIES_FOUND.printMessage("are", num, "ies", ":");
     }
-    MessageCli.ACTIVITIES_FOUND.printMessage("are", num, "ies", ":");
 
     // if op has activities, add them to a printed list
     for (Activity act : actList) {
@@ -364,7 +364,7 @@ public class OperatorManagementSystem {
 
         if (match) {
           matches.add(act);
-          foundActs++;
+          foundActs += 1;
         }
       }
     }
@@ -414,11 +414,11 @@ public class OperatorManagementSystem {
 
     // make id
     String nextNum = idNum(act.getNum());
-    String revId = activityId + "-" + nextNum;
+    String revId = activityId + "-R" + idNumRemoveZero(nextNum);
     act.setNum(nextNum);
 
     // amke review
-    Review newReview = new Public(options[0], options[2], options[1], revId, options[3]);
+    Review newReview = new Public(options[0], options[2], options[3], revId, options[1]);
     revList.add(newReview);
     newReview.setActId(act.getId());
 
@@ -467,6 +467,13 @@ public class OperatorManagementSystem {
       default:
         MessageCli.REVIEWS_FOUND.printMessage("are", Integer.toString(match), "s", act.getName());
         break;
+    }
+
+    // print reviews
+    for (Review rev : matches) {
+      MessageCli.REVIEW_ENTRY_HEADER.printMessage(
+          rev.getRating(), "5", rev.getType(), rev.getId(), rev.getName());
+      MessageCli.REVIEW_ENTRY_REVIEW_TEXT.printMessage(rev.getText());
     }
   }
 
