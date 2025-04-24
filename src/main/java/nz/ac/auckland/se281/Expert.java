@@ -1,8 +1,8 @@
 package nz.ac.auckland.se281;
 
 public class Expert extends Review {
-  boolean recommend;
-  String image;
+  private boolean recommend;
+  private String image;
 
   public Expert(
       String name, String rating, String text, String id, String email, boolean recommend) {

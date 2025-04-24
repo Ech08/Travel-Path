@@ -1,8 +1,8 @@
 package nz.ac.auckland.se281;
 
 public class Public extends Review {
-  boolean anonymous;
-  boolean endorsed;
+  private boolean anonymous;
+  private boolean endorsed;
 
   public Public(String name, String rating, String text, String id, String anonymous) {
     super(name, rating, text, id);

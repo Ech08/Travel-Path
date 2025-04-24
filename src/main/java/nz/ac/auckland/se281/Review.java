@@ -26,11 +26,19 @@ public abstract class Review {
     return this.text;
   }
 
-  public String id() {
+  public String getId() {
     return this.id;
+  }
+
+  public String getActId() {
+    return this.actId;
   }
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public void setActId(String id) {
+    this.actId = id;
   }
 }

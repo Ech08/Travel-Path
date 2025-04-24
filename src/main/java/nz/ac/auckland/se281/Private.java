@@ -1,10 +1,10 @@
 package nz.ac.auckland.se281;
 
 public class Private extends Review {
-  String email;
-  boolean followUp;
-  boolean resolved;
-  String resolveText = "-";
+  private String email;
+  private boolean followUp;
+  private boolean resolved;
+  private String resolveText = "-";
 
   public Private(
       String name,

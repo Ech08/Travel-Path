@@ -420,6 +420,7 @@ public class OperatorManagementSystem {
     // amke review
     Review newReview = new Public(options[0], options[2], options[1], revId, options[3]);
     revList.add(newReview);
+    newReview.setActId(act.getId());
 
     // print success message
     MessageCli.REVIEW_ADDED.printMessage("Public", revId, act.getName());
@@ -444,14 +445,17 @@ public class OperatorManagementSystem {
     ArrayList<Review> matches = new ArrayList<>();
     int match = 0;
 
-    for (Review r : revList) {
-      // if match add to list
-      if (r.actId.equals(activityId)) {
-        matches.add(r);
-        match++;
+    // if there are no reviews ever created, skip
+    if (revList.size() != 0) {
+      // else check every review to see if it falls under activity
+      for (Review r : revList) {
+        // if match add to list
+        if (r.getActId().equals(activityId)) {
+          matches.add(r);
+          match++;
+        }
       }
     }
-
     // print message
     switch (match) {
       case 0:
