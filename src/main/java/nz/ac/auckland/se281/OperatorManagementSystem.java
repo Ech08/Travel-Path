@@ -395,7 +395,7 @@ public class OperatorManagementSystem {
 
     // check id activity exists
     if (actExists(activityId) == false) {
-      MessageCli.ACTIVITY_NOT_CREATED_INVALID_OPERATOR_ID.printMessage(activityId);
+      MessageCli.REVIEW_NOT_ADDED_INVALID_ACTIVITY_ID.printMessage(activityId);
       return;
     }
     Activity act = actFromId(activityId);
@@ -434,7 +434,36 @@ public class OperatorManagementSystem {
   }
 
   public void displayReviews(String activityId) {
-    // TODO implement
+
+    // check id activity exists
+    if (actExists(activityId) == false) {
+      MessageCli.ACTIVITY_NOT_FOUND.printMessage(activityId);
+      return;
+    }
+    Activity act = actFromId(activityId);
+    ArrayList<Review> matches = new ArrayList<>();
+    int match = 0;
+
+    for (Review r : revList) {
+      // if match add to list
+      if (r.actId.equals(activityId)) {
+        matches.add(r);
+        match++;
+      }
+    }
+
+    // print message
+    switch (match) {
+      case 0:
+        MessageCli.REVIEWS_FOUND.printMessage("are", "no", "s", act.getName());
+        break;
+      case 1:
+        MessageCli.REVIEWS_FOUND.printMessage("is", "1", "", act.getName());
+        break;
+      default:
+        MessageCli.REVIEWS_FOUND.printMessage("are", Integer.toString(match), "s", act.getName());
+        break;
+    }
   }
 
   public void endorseReview(String reviewId) {
