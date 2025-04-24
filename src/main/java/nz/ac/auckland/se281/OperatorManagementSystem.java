@@ -476,7 +476,46 @@ public class OperatorManagementSystem {
     MessageCli.REVIEW_ADDED.printMessage("Private", revId, act.getName());
   }
 
-  public void addExpertReview(String activityId, String[] options) {}
+  public void addExpertReview(String activityId, String[] options) {
+    boolean recommend = false;
+    if (options[3].equals("y")) {
+      recommend = true;
+    } else {
+      recommend = false;
+    }
+
+    // check id activity exists
+    if (actExists(activityId) == false) {
+      MessageCli.REVIEW_NOT_ADDED_INVALID_ACTIVITY_ID.printMessage(activityId);
+      return;
+    }
+    Activity act = actFromId(activityId);
+
+    // check rating is appropriate, if not set as closest number
+    String rating = options[1];
+    int ratingInt = Integer.parseInt(rating);
+
+    if (ratingInt > 5) {
+      rating = "5";
+    } else if (ratingInt < 1) {
+      rating = "0";
+    } else {
+      rating = Integer.toString(ratingInt);
+    }
+
+    // make id
+    String nextNum = idNum(act.getNum());
+    String revId = activityId + "-R" + idNumRemoveZero(nextNum);
+    act.setNum(nextNum);
+
+    // amke review
+    Review newReview = new Expert(options[0], options[1], options[2], revId, recommend);
+    revList.add(newReview);
+    newReview.setActId(act.getId());
+
+    // print success message
+    MessageCli.REVIEW_ADDED.printMessage("Expert", revId, act.getName());
+  }
 
   public void displayReviews(String activityId) {
 
@@ -524,6 +563,9 @@ public class OperatorManagementSystem {
         } else {
           MessageCli.REVIEW_ENTRY_FOLLOW_UP.printMessage(((Private) rev).getEmail());
         }
+      }
+      if (rev.getType().equals("Expett")) {
+        MessageCli.REVIEW_ENTRY_RECOMMENDED.printMessage();
       }
     }
   }
