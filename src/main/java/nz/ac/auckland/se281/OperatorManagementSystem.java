@@ -427,12 +427,56 @@ public class OperatorManagementSystem {
   }
 
   public void addPrivateReview(String activityId, String[] options) {
-    // TODO implement
+    boolean followup = false;
+    boolean resolved = true;
+    if (options[4].equals("y")) {
+      followup = true;
+      resolved = false;
+    } else {
+      followup = false;
+      resolved = true;
+    }
+
+    // check id activity exists
+    if (actExists(activityId) == false) {
+      MessageCli.REVIEW_NOT_ADDED_INVALID_ACTIVITY_ID.printMessage(activityId);
+      return;
+    }
+    Activity act = actFromId(activityId);
+
+    // check rating is appropriate, if not set as closest number
+    String rating = options[2];
+    int ratingInt = Integer.parseInt(rating);
+
+    if (ratingInt > 5) {
+      rating = "5";
+    } else if (ratingInt < 1) {
+      rating = "0";
+    } else {
+      rating = Integer.toString(ratingInt);
+    }
+
+    // make id
+    String nextNum = idNum(act.getNum());
+    String revId = activityId + "-R" + idNumRemoveZero(nextNum);
+    act.setNum(nextNum);
+
+    // followup handling
+    if (followup) {
+      resolved = false;
+    }
+
+    // amke review
+    Review newReview =
+        new Private(options[0], options[2], options[3], revId, options[1], followup, resolved);
+    revList.add(newReview);
+    newReview.setActId(act.getId());
+
+    // print success message
+    MessageCli.REVIEW_ADDED.printMessage("Private", revId, act.getName());
   }
 
-  public void addExpertReview(String activityId, String[] options) {
-    // TODO implement
-  }
+  public void addExpertReview(String activityId, String[] options) {}
 
   public void displayReviews(String activityId) {
 
@@ -474,6 +518,13 @@ public class OperatorManagementSystem {
       MessageCli.REVIEW_ENTRY_HEADER.printMessage(
           rev.getRating(), "5", rev.getType(), rev.getId(), rev.getName());
       MessageCli.REVIEW_ENTRY_REVIEW_TEXT.printMessage(rev.getText());
+      if (rev.getType().equals("Private")) {
+        if (((Private) rev).isResolved()) {
+          MessageCli.REVIEW_ENTRY_RESOLVED.printMessage(((Private) rev).getResolveText());
+        } else {
+          MessageCli.REVIEW_ENTRY_FOLLOW_UP.printMessage(((Private) rev).getEmail());
+        }
+      }
     }
   }
 

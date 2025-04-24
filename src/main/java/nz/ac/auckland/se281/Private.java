@@ -29,6 +29,14 @@ public class Private extends Review {
     return this.email;
   }
 
+  public boolean isResolved() {
+    return this.resolved;
+  }
+
+  public String getResolveText() {
+    return this.resolveText;
+  }
+
   public void setResolveText(String text) {
     this.resolveText = text;
   }
