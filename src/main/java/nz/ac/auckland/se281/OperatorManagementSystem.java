@@ -89,6 +89,16 @@ public class OperatorManagementSystem {
     return activity;
   }
 
+  public Review revFromId(String id) {
+    Review rev = null;
+    for (Review r : revList) {
+      if (id.equals(r.getId())) {
+        rev = r;
+      }
+    }
+    return rev;
+  }
+
   public String getAbbrev(String name) {
     // get name abbreviation
     String words[] = name.split(" ");
@@ -111,14 +121,6 @@ public class OperatorManagementSystem {
     return false;
   }
 
-  public boolean opExists(String id) {
-    Operator op = opFromId(id);
-    if (!containsOp(op)) {
-      return false;
-    }
-    return true;
-  }
-
   public boolean containsAct(Activity act) {
     for (Activity testAct : actList) {
       if (testAct.equals(act)) {
@@ -128,12 +130,37 @@ public class OperatorManagementSystem {
     return false;
   }
 
+  public boolean containsRev(Review rev) {
+    for (Review testRev : revList) {
+      if (testRev.equals(rev)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean opExists(String id) {
+    Operator op = opFromId(id);
+    if (!containsOp(op)) {
+      return false;
+    }
+    return true;
+  }
+
   public boolean actExists(String id) {
     Activity act = actFromId(id);
     if (!containsAct(act)) {
       return false;
     }
     return true;
+  }
+
+  public boolean revExists(String id) {
+    Review rev = revFromId(id);
+    if (containsRev(rev)) {
+      return true;
+    }
+    return false;
   }
 
   // -----------------------------------------------------------------
@@ -557,6 +584,11 @@ public class OperatorManagementSystem {
       MessageCli.REVIEW_ENTRY_HEADER.printMessage(
           rev.getRating(), "5", rev.getType(), rev.getId(), rev.getName());
       MessageCli.REVIEW_ENTRY_REVIEW_TEXT.printMessage(rev.getText());
+      if (rev.getType().equals("Public")) {
+        if (((Public) rev).getEndorsed() == true) {
+          MessageCli.REVIEW_ENTRY_ENDORSED.printMessage();
+        }
+      }
       if (rev.getType().equals("Private")) {
         if (((Private) rev).isResolved()) {
           MessageCli.REVIEW_ENTRY_RESOLVED.printMessage(((Private) rev).getResolveText());
@@ -564,14 +596,31 @@ public class OperatorManagementSystem {
           MessageCli.REVIEW_ENTRY_FOLLOW_UP.printMessage(((Private) rev).getEmail());
         }
       }
-      if (rev.getType().equals("Expett")) {
+      if (rev.getType().equals("Expert")) {
         MessageCli.REVIEW_ENTRY_RECOMMENDED.printMessage();
       }
     }
   }
 
   public void endorseReview(String reviewId) {
-    // TODO implement
+    // check id review exists
+    if (revExists(reviewId) == false) {
+      MessageCli.REVIEW_NOT_FOUND.printMessage(reviewId);
+      return;
+    }
+    Review rev = revFromId(reviewId);
+
+    // check if public
+    if (!rev.getType().equals("Public")) {
+      MessageCli.REVIEW_NOT_ENDORSED.printMessage(reviewId);
+      return;
+    }
+
+    // change review to endorsed
+    ((Public) rev).setEndorsed(true);
+
+    // print success message
+    MessageCli.REVIEW_ENDORSED.printMessage(reviewId);
   }
 
   public void resolveReview(String reviewId, String response) {
