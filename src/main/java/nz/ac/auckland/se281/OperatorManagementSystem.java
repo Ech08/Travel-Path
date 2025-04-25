@@ -332,7 +332,6 @@ public class OperatorManagementSystem {
 
     // set type
     ActivityType type = ActivityType.fromString(activityType);
-    System.out.println(type.toString());
     String actType = type.toString();
 
     // set id
@@ -354,7 +353,6 @@ public class OperatorManagementSystem {
     int foundActs = 0;
     ArrayList<Activity> matches = new ArrayList<>();
     keyword = keyword.toLowerCase().trim();
-    String keywords[] = keyword.split(" ");
 
     // add all activities to matches list if searching '*'
     if (keyword.equalsIgnoreCase("*")) {
@@ -369,29 +367,21 @@ public class OperatorManagementSystem {
         ArrayList<String> parts = new ArrayList<>();
         Operator op = act.getOp();
 
-        String[] part1 = act.getName().split(" "); // name
-        for (int i = 0; i < part1.length; i++) {
-          part1[i] = part1[i].toLowerCase();
-        }
-        parts.addAll(Arrays.asList(part1));
-        String part2 = act.getType().toString(); // type
-        for (int i = 0; i < part1.length; i++) {
-          part1[i] = part1[i].toLowerCase();
-        }
-
+        String part1 = act.getName().toLowerCase(); // name
+        parts.add(part1);
+        String part2 = act.getType().toString().toLowerCase(); // type
         parts.add(part2);
         String[] part3 = op.getLocFull().split(" "); // location (full)
         parts.addAll(Arrays.asList(part3));
-        String abbrevLoc = (op.getLoc()).getLocationAbbreviation(); // location (abbrev)
+        String abbrevLoc =
+            (op.getLoc()).getLocationAbbreviation().toLowerCase(); // location (abbrev)
         parts.add(abbrevLoc);
 
         if (!keyword.isBlank()) {
-          for (int j = 0; j < keywords.length; j++) {
-            for (int i = 0; i < parts.size(); i++) {
-              System.out.println(parts.get(i));
-              if ((parts.get(i).toLowerCase()).contains(keywords[j])) {
-                match = true;
-              }
+          for (int i = 0; i < parts.size(); i++) {
+            System.out.println(parts.get(i));
+            if ((parts.get(i).toLowerCase()).contains(keyword)) {
+              match = true;
             }
           }
         }
@@ -461,7 +451,7 @@ public class OperatorManagementSystem {
     newReview.setActId(act.getId());
 
     // print success message
-    MessageCli.REVIEW_ADDED.printMessage("Public", revId, name);
+    MessageCli.REVIEW_ADDED.printMessage("Public", revId, act.getName());
   }
 
   public void addPrivateReview(String activityId, String[] options) {
