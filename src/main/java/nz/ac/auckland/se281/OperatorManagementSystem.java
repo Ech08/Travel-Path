@@ -13,6 +13,7 @@ public class OperatorManagementSystem {
   private HashMap<String, String> locNums = new HashMap<String, String>();
   private ArrayList<Activity> actList = new ArrayList<>();
   private ArrayList<Review> revList = new ArrayList<>();
+  private ArrayList<Location> locList = new ArrayList<>();
 
   // custom methods:
   public String nameFromOpId(String id) {
@@ -170,14 +171,10 @@ public class OperatorManagementSystem {
     this.opList = new ArrayList<>();
     this.locNums = new HashMap<String, String>();
 
-    this.locNums.put("AKL", "000");
-    this.locNums.put("HLZ", "000");
-    this.locNums.put("TRG", "000");
-    this.locNums.put("TUO", "000");
-    this.locNums.put("WLG", "000");
-    this.locNums.put("NSN", "000");
-    this.locNums.put("CHC", "000");
-    this.locNums.put("DUD", "000");
+    for (Location loc : Location.values()) {
+      this.locList.add(loc);
+      this.locNums.put(loc.getLocationAbbreviation(), "000");
+    }
   }
 
   public void searchOperators(String keyword) {
@@ -318,6 +315,7 @@ public class OperatorManagementSystem {
   }
 
   public void createActivity(String activityName, String activityType, String operatorId) {
+    activityName = activityName.trim();
 
     // checks if operator name is valid before continuing
     if (activityName.length() < 3) {
@@ -334,10 +332,8 @@ public class OperatorManagementSystem {
 
     // set type
     ActivityType type = ActivityType.fromString(activityType);
+    System.out.println(type.toString());
     String actType = type.toString();
-    if (type == ActivityType.OTHER) {
-      actType = "other";
-    }
 
     // set id
     String opName = nameFromOpId(operatorId);
@@ -357,7 +353,8 @@ public class OperatorManagementSystem {
   public void searchActivities(String keyword) {
     int foundActs = 0;
     ArrayList<Activity> matches = new ArrayList<>();
-    keyword = keyword.toLowerCase();
+    keyword = keyword.toLowerCase().trim();
+    String keywords[] = keyword.split(" ");
 
     // add all activities to matches list if searching '*'
     if (keyword.equalsIgnoreCase("*")) {
@@ -373,8 +370,15 @@ public class OperatorManagementSystem {
         Operator op = act.getOp();
 
         String[] part1 = act.getName().split(" "); // name
+        for (int i = 0; i < part1.length; i++) {
+          part1[i] = part1[i].toLowerCase();
+        }
         parts.addAll(Arrays.asList(part1));
         String part2 = act.getType().toString(); // type
+        for (int i = 0; i < part1.length; i++) {
+          part1[i] = part1[i].toLowerCase();
+        }
+
         parts.add(part2);
         String[] part3 = op.getLocFull().split(" "); // location (full)
         parts.addAll(Arrays.asList(part3));
@@ -382,9 +386,12 @@ public class OperatorManagementSystem {
         parts.add(abbrevLoc);
 
         if (!keyword.isBlank()) {
-          for (int i = 0; i < parts.size(); i++) {
-            if (parts.get(i).toLowerCase().contains(keyword)) {
-              match = true;
+          for (int j = 0; j < keywords.length; j++) {
+            for (int i = 0; i < parts.size(); i++) {
+              System.out.println(parts.get(i));
+              if ((parts.get(i).toLowerCase()).contains(keywords[j])) {
+                match = true;
+              }
             }
           }
         }
@@ -430,11 +437,10 @@ public class OperatorManagementSystem {
     // check rating is appropriate, if not set as closest number
     String rating = options[2];
     int ratingInt = Integer.parseInt(rating);
-
     if (ratingInt > 5) {
       rating = "5";
     } else if (ratingInt < 1) {
-      rating = "0";
+      rating = "1";
     } else {
       rating = Integer.toString(ratingInt);
     }
@@ -444,13 +450,18 @@ public class OperatorManagementSystem {
     String revId = activityId + "-R" + idNumRemoveZero(nextNum);
     act.setNum(nextNum);
 
+    String name = options[0];
+    if (options[1].equalsIgnoreCase("y")) {
+      name = "Anonymous";
+    }
+
     // amke review
-    Review newReview = new Public(options[0], options[2], options[3], revId, options[1]);
+    Review newReview = new Public(name, rating, options[3], revId);
     revList.add(newReview);
     newReview.setActId(act.getId());
 
     // print success message
-    MessageCli.REVIEW_ADDED.printMessage("Public", revId, act.getName());
+    MessageCli.REVIEW_ADDED.printMessage("Public", revId, name);
   }
 
   public void addPrivateReview(String activityId, String[] options) {
@@ -474,11 +485,10 @@ public class OperatorManagementSystem {
     // check rating is appropriate, if not set as closest number
     String rating = options[2];
     int ratingInt = Integer.parseInt(rating);
-
     if (ratingInt > 5) {
       rating = "5";
     } else if (ratingInt < 1) {
-      rating = "0";
+      rating = "1";
     } else {
       rating = Integer.toString(ratingInt);
     }
@@ -495,7 +505,7 @@ public class OperatorManagementSystem {
 
     // amke review
     Review newReview =
-        new Private(options[0], options[2], options[3], revId, options[1], followup, resolved);
+        new Private(options[0], rating, options[3], revId, options[1], followup, resolved);
     revList.add(newReview);
     newReview.setActId(act.getId());
 
@@ -521,11 +531,10 @@ public class OperatorManagementSystem {
     // check rating is appropriate, if not set as closest number
     String rating = options[1];
     int ratingInt = Integer.parseInt(rating);
-
     if (ratingInt > 5) {
       rating = "5";
     } else if (ratingInt < 1) {
-      rating = "0";
+      rating = "1";
     } else {
       rating = Integer.toString(ratingInt);
     }
@@ -536,7 +545,7 @@ public class OperatorManagementSystem {
     act.setNum(nextNum);
 
     // amke review
-    Review newReview = new Expert(options[0], options[1], options[2], revId, recommend);
+    Review newReview = new Expert(options[0], rating, options[2], revId, recommend);
     revList.add(newReview);
     newReview.setActId(act.getId());
 
@@ -600,7 +609,9 @@ public class OperatorManagementSystem {
         }
       }
       if (rev.getType().equals("Expert")) {
-        MessageCli.REVIEW_ENTRY_RECOMMENDED.printMessage();
+        if (((Expert) rev).getRecomend()) {
+          MessageCli.REVIEW_ENTRY_RECOMMENDED.printMessage();
+        }
         // check if review has images
         if (((Expert) rev).hasImagess()) {
           // format images into one string before printing
@@ -682,6 +693,61 @@ public class OperatorManagementSystem {
   }
 
   public void displayTopActivities() {
-    // TODO implement
+    // initialise arrays to store top activities and ratings
+    ArrayList<Activity> topActivities = new ArrayList<>();
+    ArrayList<Integer> averageRatings = new ArrayList<>();
+
+    // find top activities and store in arrays
+    for (Location loc : locList) {
+      int currentRating = 0;
+      Activity topActivity = null;
+
+      // find top activity for location loc
+      for (Activity act : actList) {
+
+        if (act.getLoc().equals(loc)) {
+          int actRating = 0;
+          int reviewCount = 0;
+          // find average rating
+          for (Review rev : revList) {
+            if (rev instanceof Private) {
+              continue;
+            }
+            if (rev.getActId().equals(act.getId())) {
+              actRating += Integer.parseInt(rev.getRating());
+              reviewCount++;
+            }
+          }
+          // if activity has no reviews, skip it
+          if (reviewCount == 0) {
+            continue;
+          }
+          actRating = actRating / reviewCount;
+
+          // if rating is higher than previous activities set as top activity
+          if (actRating > currentRating) {
+            currentRating = actRating;
+            topActivity = act;
+          }
+        }
+      }
+      // add top activity to list
+      topActivities.add(topActivity);
+      averageRatings.add(currentRating);
+    }
+
+    // print top activities
+    for (int i = 0; i < topActivities.size(); i++) {
+      String location = locList.get(i).toString();
+      Activity act = topActivities.get(i);
+
+      if (topActivities.get(i) == null) {
+        MessageCli.NO_REVIEWED_ACTIVITIES.printMessage(location);
+      } else {
+        MessageCli.TOP_ACTIVITY.printMessage(
+            location, act.getName(), averageRatings.get(i).toString());
+      }
+      // }
+    }
   }
 }
