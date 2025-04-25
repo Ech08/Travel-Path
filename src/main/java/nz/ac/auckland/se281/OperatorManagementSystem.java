@@ -624,7 +624,25 @@ public class OperatorManagementSystem {
   }
 
   public void resolveReview(String reviewId, String response) {
-    // TODO implement
+    // check id review exists
+    if (revExists(reviewId) == false) {
+      MessageCli.REVIEW_NOT_FOUND.printMessage(reviewId);
+      return;
+    }
+    Review rev = revFromId(reviewId);
+
+    // check if private
+    if (!rev.getType().equals("Private")) {
+      MessageCli.REVIEW_NOT_RESOLVED.printMessage(reviewId);
+      return;
+    }
+
+    // change to resolved
+    ((Private) rev).setResolveText(response);
+    ((Private) rev).setResolved(true);
+
+    // print success message
+    MessageCli.REVIEW_RESOLVED.printMessage(reviewId);
   }
 
   public void uploadReviewImage(String reviewId, String imageName) {
