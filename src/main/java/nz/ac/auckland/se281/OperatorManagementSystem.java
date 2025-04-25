@@ -581,15 +581,18 @@ public class OperatorManagementSystem {
 
     // print reviews
     for (Review rev : matches) {
+      // print review details
       MessageCli.REVIEW_ENTRY_HEADER.printMessage(
           rev.getRating(), "5", rev.getType(), rev.getId(), rev.getName());
       MessageCli.REVIEW_ENTRY_REVIEW_TEXT.printMessage(rev.getText());
       if (rev.getType().equals("Public")) {
+        // check if review is endorsed
         if (((Public) rev).getEndorsed() == true) {
           MessageCli.REVIEW_ENTRY_ENDORSED.printMessage();
         }
       }
       if (rev.getType().equals("Private")) {
+        // check if review is resolved or needs follow up
         if (((Private) rev).isResolved()) {
           MessageCli.REVIEW_ENTRY_RESOLVED.printMessage(((Private) rev).getResolveText());
         } else {
@@ -598,6 +601,18 @@ public class OperatorManagementSystem {
       }
       if (rev.getType().equals("Expert")) {
         MessageCli.REVIEW_ENTRY_RECOMMENDED.printMessage();
+        // check if review has images
+        if (((Expert) rev).hasImagess()) {
+          // format images into one string before printing
+          String imageText = ((Expert) rev).getImages().get(0);
+          for (String i : ((Expert) rev).getImages()) {
+            if (i == ((Expert) rev).getImages().get(0)) {
+              continue;
+            }
+            imageText = imageText + "," + i;
+          }
+          MessageCli.REVIEW_ENTRY_IMAGES.printMessage(imageText);
+        }
       }
     }
   }
@@ -646,7 +661,24 @@ public class OperatorManagementSystem {
   }
 
   public void uploadReviewImage(String reviewId, String imageName) {
-    // TODO implement
+    // check id review exists
+    if (revExists(reviewId) == false) {
+      MessageCli.REVIEW_NOT_FOUND.printMessage(reviewId);
+      return;
+    }
+    Review rev = revFromId(reviewId);
+
+    // check if expert
+    if (!rev.getType().equals("Expert")) {
+      MessageCli.REVIEW_IMAGE_NOT_ADDED_NOT_EXPERT.printMessage(reviewId);
+      return;
+    }
+
+    // add image
+    ((Expert) rev).addImages(imageName);
+
+    // print success message
+    MessageCli.REVIEW_IMAGE_ADDED.printMessage(imageName, reviewId);
   }
 
   public void displayTopActivities() {
