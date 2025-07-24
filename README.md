@@ -1,3 +1,4 @@
-# Assignment 1
+# Travel Path
 
-You will find instructions for this assignment on the course website.
+This code finds the shortest path from one place to another, calculating "fuel cost", and listing countries, continents visited.
+This is based off the game Risk.
